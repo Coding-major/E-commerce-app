@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 
-const connectionString = "mongodb://localhost:27017/ffff"
+const connectionString = "mongodb://localhost:27017/E-commerce"
 
 const connectDB = (url) => {
     return mongoose.connect(connectionString)
