@@ -5,19 +5,21 @@ const express = require("express")
 const app = express()
 const connectDB = require("./DB/connect")
 const morgan = require("morgan")
+const cookieParser = require("cookie-parser")
 
 const authRouter = require("./routes/authRoute")
 
 const notFoundMiddleware = require("./middlewares/notFound")
 const errorHandlerMiddleware = require("./middlewares/errorHandler")
-const unAuthorizedMiddleware = require("./middlewares/unAuthorized")
+//const unAuthorizedMiddleware = require("./middlewares/unAuthorized")
 
 app.use(morgan('tiny'))
 app.use(express.json())
+app.use(cookieParser())
 
-
-app.get("/", (req, res) => {
+app.get("/api/v1", (req, res) => {
     res.send("ecommerce is on")
+    
 })
 
 app.use("/api/v1/auth", authRouter)

@@ -17,9 +17,18 @@ const register = async (req, res) => {
 
     const user = await User.create(req.body)
     const userPayload = {name: user.name, userID: user._id}
-const token = createJWT(userPayload)
+    const token = createJWT(userPayload)
+
+    const oneDay = 10000 * 60 * 60 * 24
+
+    res.cookie('tokenp', token, {
+        httpOnly: true,
+        expires: new Date(Date.now() + oneDay)
+    })
+
+    console.log(req.cookies);
+    res.status(StatusCodes.CREATED).json({user: userPayload})
     
-    res.status(StatusCodes.CREATED).json({user: userPayload, token})
 }
 
 const login = async (req, res) => {
