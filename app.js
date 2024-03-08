@@ -6,6 +6,8 @@ const app = express()
 const connectDB = require("./DB/connect")
 const morgan = require("morgan")
 
+const authRouter = require("./routes/authRoute")
+
 const notFoundMiddleware = require("./middlewares/notFound")
 const errorHandlerMiddleware = require("./middlewares/errorHandler")
 const unAuthorizedMiddleware = require("./middlewares/unAuthorized")
@@ -17,6 +19,8 @@ app.use(express.json())
 app.get("/", (req, res) => {
     res.send("ecommerce is on")
 })
+
+app.use("/api/v1/auth", authRouter)
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)
