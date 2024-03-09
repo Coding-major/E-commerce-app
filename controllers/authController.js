@@ -2,7 +2,7 @@ const User = require('../models/user')
 const { customError, badRequest, unAuthorized, notFound  } = require("../errors/indexErrors")
 const { StatusCodes } = require("http-status-codes")
 const {
-    createJWT,
+    attachCookiesToResponse,
     verifyJWT
 } = require("../utils/jwt")
 
@@ -17,15 +17,11 @@ const register = async (req, res) => {
 
     const user = await User.create(req.body)
     const userPayload = {name: user.name, userID: user._id}
-    const token = createJWT(userPayload)
 
-    const oneDay = 10000 * 60 * 60 * 24
+    attachCookiesToResponse(res, {user: userPayload})
+    
 
-    res.cookie('tokenp', token, {
-        httpOnly: true,
-        expires: new Date(Date.now() + oneDay)
-    })
-
+    
     console.log(req.cookies);
     res.status(StatusCodes.CREATED).json({user: userPayload})
     

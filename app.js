@@ -18,6 +18,7 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.get("/api/v1", (req, res) => {
+    console.log(req.cookies);
     res.send("ecommerce is on")
     
 })

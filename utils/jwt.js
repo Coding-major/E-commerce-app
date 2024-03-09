@@ -12,7 +12,20 @@ const verifyJWT = (token) => {
     const verify = jwt.verify(token, process.env.JWT_SECRET)
 }
 
+const attachCookiesToResponse = (res, user) => {
+    const token = createJWT(user)
+
+    const oneDay = 10000 * 60 * 60 * 24
+
+    res.cookie('my_token', token, {
+        httpOnly: true,
+        expires: new Date(Date.now() + oneDay)
+    })
+
+
+}
+
 module.exports = {
-    createJWT,
-    verifyJWT
+    verifyJWT,
+    attachCookiesToResponse
 }
