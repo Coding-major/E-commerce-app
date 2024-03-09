@@ -1,3 +1,4 @@
+const { process_params } = require("express/lib/router");
 const jwt = require("jsonwebtoken")
 
 const createJWT = (payload) => {
@@ -19,7 +20,9 @@ const attachCookiesToResponse = (res, user) => {
 
     res.cookie('my_token', token, {
         httpOnly: true,
-        expires: new Date(Date.now() + oneDay)
+        expires: new Date(Date.now() + oneDay),
+        secure: process.env.NODE_ENV === "production",
+        signed: true
     })
 
 

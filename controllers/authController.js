@@ -21,8 +21,7 @@ const register = async (req, res) => {
     attachCookiesToResponse(res, {user: userPayload})
     
 
-    
-    console.log(req.cookies);
+
     res.status(StatusCodes.CREATED).json({user: userPayload})
     
 }
