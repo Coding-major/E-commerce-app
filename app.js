@@ -8,6 +8,7 @@ const morgan = require("morgan")
 const cookieParser = require("cookie-parser")
 
 const authRouter = require("./routes/authRoute")
+const userRouter = require("./routes/userRoute")
 
 const notFoundMiddleware = require("./middlewares/notFound")
 const errorHandlerMiddleware = require("./middlewares/errorHandler")
@@ -24,6 +25,7 @@ app.get("/api/v1", (req, res) => {
 })
 
 app.use("/api/v1/auth", authRouter)
+app.use("/api/v1/user", userRouter)
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)
