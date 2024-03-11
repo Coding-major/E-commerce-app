@@ -21,7 +21,7 @@ const register = async (req, res) => {
     }
 
     const user = await User.create(req.body)
-    const userPayload = {name: user.name, userID: user._id}
+    const userPayload = {name: user.name, userID: user._id, role: user.role}
 
     attachCookiesToResponse(res, {user: userPayload})
     
@@ -50,8 +50,8 @@ const login = async (req, res) => {
         throw new unAuthorized("password is not correct")
     }
 
-    const userPayload = {name: user.name, userID: user._id}
-    attachCookiesToResponse(res, {user: userPayload})
+    const userPayload = {name: user.name, userID: user._id, role: user.role}
+    attachCookiesToResponse(res, userPayload)
 
     res.status(StatusCodes.CREATED).json({user: userPayload})
 

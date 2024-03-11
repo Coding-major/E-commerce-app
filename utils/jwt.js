@@ -11,6 +11,7 @@ const createJWT = (payload) => {
 
 const verifyJWT = (token) => {
     const verify = jwt.verify(token, process.env.JWT_SECRET)
+    return verify
 }
 
 const attachCookiesToResponse = (res, user) => {

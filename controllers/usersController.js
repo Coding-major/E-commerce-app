@@ -8,6 +8,7 @@ const {
 } = require("../errors/indexErrors")
 
 const getAllUsers = async (req, res) => {
+    console.log(req.user)
     const users = await User.find({role: "user"}).select("-password")
     if (!users) {
         throw new notFound("No users in the list")
