@@ -17,11 +17,14 @@ const authenticateUser = async (req, res, next) => {
     }    
 }
 
-const authorizeUser = async (req, res, next) => {
-    if (req.user.role !== "admin") {
-        throw new forbidden("you don't have access, only admin can access")
+const authorizeUser = (...rolesParameters) => {
+    return (req, res, next) => {
+        if (!rolesParameters.includes(req.user.role)) {
+            throw new forbidden("you are forbidden to access this data as you are not an admin")
+        }
+        
+        next()
     }
-    next()
 }
 
 module.exports = {
