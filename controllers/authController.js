@@ -23,7 +23,7 @@ const register = async (req, res) => {
     const user = await User.create(req.body)
     const userPayload = {name: user.name, userID: user._id, role: user.role}
 
-    attachCookiesToResponse(res, {user: userPayload})
+    attachCookiesToResponse(res, userPayload)
     
 
 
