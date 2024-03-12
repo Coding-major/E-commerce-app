@@ -27,11 +27,33 @@ const getSingleUser = async (req, res) => {
 
 
 const showCurrentUser = async (req, res) => {
-    res.json({msg: "current user"})
+    res.status(StatusCodes.OK).json({msg: req.user})
 }
 
 const updateUserPassword = async (req, res) => {
-    res.json({msg: "update user"})
+    const { oldPassword, newPassword, newPasswordAgain } = req.body;
+    if (!oldPassword || !newPassword || !newPasswordAgain) {
+        throw new badRequest("please enter a value")
+    }
+
+    
+    const user = await User.findOne({_id: req.user.userID})
+    
+    const isCorrect = await user.comparePassword(oldPassword)
+    if (!isCorrect) {
+        throw new unAuthorized("invalid credentials")
+    }
+
+    if (newPassword !== newPasswordAgain) {
+        throw new unAuthorized("both new password does not match")
+    }
+
+    user.password = newPassword
+
+    await user.save()
+    res.status(StatusCodes.OK).json({msg: "password change successful"})
+
+
 }
 
 
