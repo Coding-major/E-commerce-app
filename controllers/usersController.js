@@ -30,6 +30,13 @@ const showCurrentUser = async (req, res) => {
     res.status(StatusCodes.OK).json({msg: req.user})
 }
 
+const updateUser = async (req, res) => {
+    const {email, name} = req.body;
+    if (!email || !name) {
+        throw new badRequest("please provide the email or name")
+    }/////////////
+}
+
 const updateUserPassword = async (req, res) => {
     const { oldPassword, newPassword, newPasswordAgain } = req.body;
     if (!oldPassword || !newPassword || !newPasswordAgain) {
@@ -61,5 +68,6 @@ module.exports = {
     getAllUsers,
     getSingleUser,
     showCurrentUser,
+    updateUser,
     updateUserPassword
 }

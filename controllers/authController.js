@@ -2,9 +2,9 @@ const User = require('../models/user')
 const { customError, badRequest, unAuthorized, notFound  } = require("../errors/indexErrors")
 const { StatusCodes } = require("http-status-codes")
 const {
+    createTokenUSer,
     attachCookiesToResponse,
-    verifyJWT
-} = require("../utils/jwt")
+} = require("../utils/index")
 
 
 const register = async (req, res) => {
@@ -21,7 +21,7 @@ const register = async (req, res) => {
     }
 
     const user = await User.create(req.body)
-    const userPayload = {name: user.name, userID: user._id, role: user.role}
+    const userPayload = createTokenUSer(user)
 
     attachCookiesToResponse(res, userPayload)
     
@@ -50,7 +50,7 @@ const login = async (req, res) => {
         throw new unAuthorized("password is not correct")
     }
 
-    const userPayload = {name: user.name, userID: user._id, role: user.role}
+    const userPayload = createTokenUSer(user)
     attachCookiesToResponse(res, userPayload)
 
     res.status(StatusCodes.CREATED).json({user: userPayload})
