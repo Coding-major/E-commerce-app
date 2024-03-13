@@ -1,6 +1,11 @@
 const User = require("../models/user")
 const {StatusCodes} = require("http-status-codes")
 const {
+    createTokenUser,
+    verifyJWT,
+    attachCookiesToResponse,
+} = require("../utils/index")
+const {
     customError,
     notFound,
     unAuthorized,
@@ -34,7 +39,18 @@ const updateUser = async (req, res) => {
     const {email, name} = req.body;
     if (!email || !name) {
         throw new badRequest("please provide the email or name")
-    }/////////////
+    }
+
+    const user = await User.findOneAndUpdate({_id: req.user.userID}, {email, name}, {
+        new: true,
+        runValidators: true
+    })
+    
+
+    const myToken = createTokenUser(user)
+    console.log(myToken)
+    attachCookiesToResponse(res, myToken)
+    res.status(StatusCodes.OK).json({msg:"you did well", user: myToken})
 }
 
 const updateUserPassword = async (req, res) => {
