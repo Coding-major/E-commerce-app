@@ -27,11 +27,17 @@ const authorizeUser = (...rolesParameters) => {
     }
 }
 
-const authorizeGettingSingleUSer = (req, res, next) => {
-    if (req.user.userID !== req.params.id) {
-        throw new forbidden("you are not allowed to check the profile")
+const authorizeGettingSingleUSer = (...rolesParameters) => {
+    return (req, res, next) => {
+
+        if ( !rolesParameters.includes(req.user.role)) {
+            if (req.user.userID !== req.params.id) {
+                throw new forbidden("you are not allowed to view it")
+            }    
+        }
+
+        next()
     }
-    next()
 }
 
 module.exports = {
