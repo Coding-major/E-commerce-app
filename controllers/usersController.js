@@ -41,10 +41,19 @@ const updateUser = async (req, res) => {
         throw new badRequest("please provide the email or name")
     }
 
-    const user = await User.findOneAndUpdate({_id: req.user.userID}, {email, name}, {
-        new: true,
-        runValidators: true
-    })
+    // const user = await User.findOneAndUpdate({_id: req.user.userID}, {email, name}, {
+    //     new: true,
+    //     runValidators: true
+    // })
+
+    const user = await User.findOne({_id: req.user.userID})
+    user.email = email;
+    user.name = name;
+
+    await user.save()
+
+
+
     
 
     const myToken = createTokenUser(user)
