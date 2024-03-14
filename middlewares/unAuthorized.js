@@ -27,7 +27,15 @@ const authorizeUser = (...rolesParameters) => {
     }
 }
 
+const authorizeGettingSingleUSer = (req, res, next) => {
+    if (req.user.userID !== req.params.id) {
+        throw new forbidden("you are not allowed to check the profile")
+    }
+    next()
+}
+
 module.exports = {
     authenticateUser,
-    authorizeUser
+    authorizeUser,
+    authorizeGettingSingleUSer
 }

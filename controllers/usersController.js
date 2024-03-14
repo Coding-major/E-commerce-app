@@ -52,10 +52,6 @@ const updateUser = async (req, res) => {
 
     await user.save()
 
-
-
-    
-
     const myToken = createTokenUser(user)
     console.log(myToken)
     attachCookiesToResponse(res, myToken)
