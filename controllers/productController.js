@@ -1,20 +1,24 @@
-const User = require("../models/product")
+const Product = require("../models/product")
 const { StatusCodes} = require("http-status-codes")
 
 const createProduct = async (req, res) => {
-    res.send("createProduct  aaa")
+    req.body.user = req.user.userID
+    const product = await Product.create(req.body)
+    res.status(StatusCodes.CREATED).json({msg: product})
 }
 
 const getAllProducts = async (req, res) => {
-    res.send("get all products  aaa")
+    const products = await Product.find({user: req.user.userID})
+    res.status(StatusCodes.OK).json({msg: products})
 }
 
 const getSingleProduct = async (req, res) => {
-    res.send("get Single")
+    const product = await Product.findOne({_id: req.params.id, user: req.user.userID})
+    res.status(StatusCodes.OK).json({msg: product})
 }
 
 const updateProduct = async (req, res) => {
-    res.send("createProduct  aaa")
+    
 }
 
 const deleteProduct = async (req, res) => {
