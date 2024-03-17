@@ -26,8 +26,8 @@ router.route("/uploadimage").post(authenticateUser, authorizeUser("admin"), uplo
 router
     .route("/:id")
     .get(getSingleProduct)
-    .patch(authenticateUser, authorizeGettingSingleUSer("admin"), updateProduct)
-    .delete(authenticateUser, authorizeGettingSingleUSer("admin"), deleteProduct)
+    .patch(authenticateUser, authorizeUser("admin"), updateProduct)
+    .delete(authenticateUser, authorizeUser("admin"), deleteProduct)
 
 
 module.exports = router
