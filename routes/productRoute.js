@@ -21,7 +21,7 @@ router
     .get(getAllProducts)
 
     
-router.route("/uploadimage").post(authenticateUser, authorizeUser("admin"), uploadImage)
+router.route("/uploadimage").post(uploadImage)
 
 router
     .route("/:id")
@@ -31,4 +31,6 @@ router
 
 
 module.exports = router
+
+//authenticateUser, authorizeUser("admin"), 
 

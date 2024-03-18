@@ -6,6 +6,7 @@ const app = express()
 const connectDB = require("./DB/connect")
 const morgan = require("morgan")
 const cookieParser = require("cookie-parser")
+const fileUpload = require("express-fileupload")
 
 const authRouter = require("./routes/authRoute")
 const userRouter = require("./routes/userRoute")
@@ -19,6 +20,8 @@ const errorHandlerMiddleware = require("./middlewares/errorHandler")
 app.use(morgan('tiny'))
 app.use(express.json())
 app.use(cookieParser(process.env.JWT_SECRET))
+app.use(express.static("./public"))
+app.use(fileUpload())
 
 app.get("/api/v1", (req, res) => {
     console.log(req.signedCookies);

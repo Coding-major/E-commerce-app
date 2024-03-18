@@ -1,5 +1,6 @@
 const Product = require("../models/product")
 const { StatusCodes} = require("http-status-codes")
+const path = require("path")
 const {
     customError,
     notFound,
@@ -55,7 +56,27 @@ const deleteProduct = async (req, res) => {
 }
 
 const uploadImage = async (req, res) => {
-    res.send("image  upload")
+    
+    
+    if(!req.files) {
+        throw new badRequest("No file uploaded")
+    }
+
+    const productImage = req.files.image
+    const maxSize = 1024 * 1024
+    const imagePath = path.join(__dirname, `../public/uploads/${productImage.name}`);
+
+     if (!productImage.mimetype.startsWith("image")) {
+        throw new badRequest("please upload image instead")
+     }
+
+     if (productImage.size > maxSize) {
+        throw new badRequest("please upload an image less than 1MB")
+     }
+
+     await productImage.mv(imagePath)
+
+    res.status(StatusCodes.OK).json({msg: "successful"})
 }
 
 module.exports = {
