@@ -17,7 +17,7 @@ const {
 
 router
     .route("/")
-    .post(authenticateUser, authorizeUser("admin"), createProduct)
+    .post(createProduct)
     .get(getAllProducts)
 
     

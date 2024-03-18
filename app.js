@@ -1,6 +1,7 @@
 require("dotenv").config()
 require("express-async-errors")
 
+
 const express = require("express")
 const app = express()
 const connectDB = require("./DB/connect")
@@ -8,14 +9,17 @@ const morgan = require("morgan")
 const cookieParser = require("cookie-parser")
 const fileUpload = require("express-fileupload")
 
+
 const authRouter = require("./routes/authRoute")
 const userRouter = require("./routes/userRoute")
 const productRouter = require("./routes/productRoute")
+const reviewRouter = require("./routes/reviewRoute")
+
 
 const {authenticateUser, authorizeUser} = require("./middlewares/unAuthorized")
 const notFoundMiddleware = require("./middlewares/notFound")
 const errorHandlerMiddleware = require("./middlewares/errorHandler")
-//const unAuthorizedMiddleware = require("./middlewares/unAuthorized")
+
 
 app.use(morgan('tiny'))
 app.use(express.json())
@@ -32,6 +36,8 @@ app.get("/api/v1", (req, res) => {
 app.use("/api/v1/auth", authRouter)
 app.use("/api/v1/user", authenticateUser, userRouter)
 app.use("/api/v1/product", productRouter)
+app.use("/api/v1/review", reviewRouter)
+
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)
