@@ -26,12 +26,15 @@ const createReview = async (req, res) => {
     }
 
     req.body.user = req.user.userID
-    const review = Review.create(req.body)
-    res.status(StatusCodes.OK).json({msg: review})
+    const review = await Review.create(req.body)
+    res.status(StatusCodes.OK).json({review})
 }
 
 const getAllReviews = async (req, res) => {
-    const reviews = await Review.find({})
+    const reviews = await Review.find({}).populate({
+        path: "product",
+        select: "name, company, price"
+    })
     if (!reviews) {
         throw new notFound("no review found")
     }
@@ -51,16 +54,30 @@ const getSingleReview = async (req, res) => {
 }
 
 const updateReview = async (req, res) => {
-    res.json({msg: "update Review"})
+    const available = await Review.findOne({_id: req.params.id})
+
+    if(!available) {
+        throw new notFound("there is no review with that ID to update")
+    }
+
+    checkPermissions(req.user.userID, available.user)
+
+    const { rating, title, comment} = req.body
+    const review = await Review.findOneAndUpdate({user: req.user.userID, _id: req.params.id}, { rating, title, comment})
+
+    res.status(StatusCodes.OK).json({msg: "update successful"})
+
 }
 
 const deleteReview = async (req, res) => {
 
 
-    const available = await Review.findOneAndDelete({_id: req.params.id})
+    const available = await Review.findOne({_id: req.params.id})
     if (!available) {
         throw new notFound("no review with that id")
     }
+    
+    checkPermissions(req.user.userID, available.user)
 
     const review = await Review.findOneAndDelete({_id: req.params.id, user: req.user.userID})
 

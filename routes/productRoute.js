@@ -6,7 +6,8 @@ const {
     getSingleProduct,
     updateProduct,
     deleteProduct,
-    uploadImage
+    uploadImage,
+    getSingleProductReviews
 } = require("../controllers/productController")
 const {
     authenticateUser,
@@ -17,7 +18,7 @@ const {
 
 router
     .route("/")
-    .post(createProduct)
+    .post(authenticateUser, createProduct)
     .get(getAllProducts)
 
     
@@ -28,6 +29,8 @@ router
     .get(getSingleProduct)
     .patch(authenticateUser, authorizeUser("admin"), updateProduct)
     .delete(authenticateUser, authorizeUser("admin"), deleteProduct)
+
+router.route("/:id/reviews").get(getSingleProductReviews);
 
 
 module.exports = router

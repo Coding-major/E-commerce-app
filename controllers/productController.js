@@ -1,4 +1,5 @@
 const Product = require("../models/product")
+const Review = require("../models/review")
 const { StatusCodes} = require("http-status-codes")
 const path = require("path")
 const {
@@ -79,11 +80,18 @@ const uploadImage = async (req, res) => {
     res.status(StatusCodes.OK).json({msg: "successful"})
 }
 
+const getSingleProductReviews = async (req, res) => {
+    const {id} = req.params
+
+    const review = await Review.find({product: id})
+    res.status(StatusCodes.OK).json({review})
+}
 module.exports = {
     createProduct,
     getAllProducts,
     getSingleProduct,
     updateProduct,
     deleteProduct,
-    uploadImage
+    uploadImage,
+    getSingleProductReviews
 }
