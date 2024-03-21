@@ -16,7 +16,7 @@ const {
     authorizeGettingSingleUSer
 } = require("../middlewares/unAuthorized")
 
-
+const {deleteMany} = require("../controllers/reviewController")
 
 
 router
@@ -33,7 +33,7 @@ router
     .route("/:id")
     .get(getSingleProduct)
     .patch(authenticateUser, authorizeUser("admin"), updateProduct)
-    .delete(authenticateUser, deleteProduct)
+    .delete(authenticateUser, deleteMany, deleteProduct)
 
 router.route("/:id/reviews").get(getSingleProductReviews);
 

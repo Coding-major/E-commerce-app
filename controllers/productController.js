@@ -66,9 +66,9 @@ const deleteProduct = async (req, res) => {
         throw new notFound("No product to delete")
     }
 
-    const review = await Review.deleteMany({product: product._id})
+    // const review = await Review.deleteMany({product: product._id})
+    res.status(StatusCodes.OK).json({msg: "delete succesfull"})
 
-    res.status(StatusCodes.OK).json({msg: product})
 }
 
 const uploadImage = async (req, res) => {
@@ -101,6 +101,8 @@ const getSingleProductReviews = async (req, res) => {
     const review = await Review.find({product: id})
     res.status(StatusCodes.OK).json({review})
 }
+
+
 module.exports = {
     createProduct,
     getAllProducts,
