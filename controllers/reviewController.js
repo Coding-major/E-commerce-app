@@ -86,18 +86,10 @@ const deleteReview = async (req, res) => {
     res.status(StatusCodes.OK).json({msg: "deleted successfully"})
 }
 
-const deleteMany = async (req, res, next) => {
-    const product = await Product.findOne({_id: req.params.id})
 
-    if ( !product) {
-        throw new notFound("no product with the id")
-    }
-
-    if (product.user != req.user.userID) {
-        throw new forbidden("you are not allowed to delete the product")
-    }
-    const review = await Review.deleteMany({product: product._id})
-    next()
+const deleteMany = async (req, res) => {
+    const review = await Review.deleteMany({product: req.params.id})
+    res.status(StatusCodes.OK).json({msg: "you don delete am, your mind don rest now abi"})
 }
 
 module.exports = {

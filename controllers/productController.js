@@ -58,16 +58,19 @@ const updateProduct = async (req, res) => {
     res.status(StatusCodes.OK).json({msg: product})
 }
 
-const deleteProduct = async (req, res) => {
+const deleteProduct = async (req, res, next) => {
     const theUser = req.user.userID
-    const product = await Product.findOneAndDelete({_id: req.params.id, user: theUser})
+    const product = await Product.findOneAndDelete({_id: req.params.id, user: req.user.userID})
 
     if(!product) {
-        throw new notFound("No product to delete")
+        throw new notFound("No product with the id to delete")
     }
 
+
     // const review = await Review.deleteMany({product: product._id})
-    res.status(StatusCodes.OK).json({msg: "delete succesfull"})
+    //res.status(StatusCodes.OK).json({msg: "delete succesfull"})
+
+    next()
 
 }
 
