@@ -9,6 +9,7 @@ const {
     badRequest,
     forbidden
 } = require("../errors/indexErrors")
+const checkPermissions = require("../utils/checkpermisions")
 
 const createProduct = async (req, res) => {
     req.body.user = req.user.userID
@@ -24,8 +25,20 @@ const getAllProducts = async (req, res) => {
     res.status(StatusCodes.OK).json({msg: products})
 }
 
+const getMyProducts = async (req, res) => {
+    const theUser = req.user.userID
+    const products = await Product.find({user: theUser}).populate("reviews")
+    if (!products) {
+        throw new notFound("no products to display")
+    }
+
+    res.status(StatusCodes.OK).json({msg: products})
+}
+
+
+
 const getSingleProduct = async (req, res) => {
-    const product = await Product.findOne({_id: req.params.id})
+    const product = await Product.findOne({_id: req.params.id}).populate("reviews")
     if (!product) {
         throw new notFound("No product to display")
     }
@@ -46,14 +59,16 @@ const updateProduct = async (req, res) => {
 }
 
 const deleteProduct = async (req, res) => {
-    const product = await Product.findOne({_id: req.params.id})
+    const theUser = req.user.userID
+    const product = await Product.findOneAndDelete({_id: req.params.id, user: theUser})
 
     if(!product) {
-        throw new notFound("No product with the ID")
+        throw new notFound("No product to delete")
     }
 
-    await product.remove()
-    res.status(StatusCodes.OK).json({msg: "product successfully deleted"})
+    const review = await Review.deleteMany({product: product._id})
+
+    res.status(StatusCodes.OK).json({msg: product})
 }
 
 const uploadImage = async (req, res) => {
@@ -89,6 +104,7 @@ const getSingleProductReviews = async (req, res) => {
 module.exports = {
     createProduct,
     getAllProducts,
+    getMyProducts,
     getSingleProduct,
     updateProduct,
     deleteProduct,

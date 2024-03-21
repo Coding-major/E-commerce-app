@@ -3,6 +3,7 @@ const router = express.Router()
 const {
     createProduct,
     getAllProducts,
+    getMyProducts,
     getSingleProduct,
     updateProduct,
     deleteProduct,
@@ -16,10 +17,14 @@ const {
 } = require("../middlewares/unAuthorized")
 
 
+
+
 router
     .route("/")
     .post(authenticateUser, createProduct)
     .get(getAllProducts)
+
+router.route("/myproducts").get(authenticateUser, getMyProducts)
 
     
 router.route("/uploadimage").post(uploadImage)
@@ -28,7 +33,7 @@ router
     .route("/:id")
     .get(getSingleProduct)
     .patch(authenticateUser, authorizeUser("admin"), updateProduct)
-    .delete(authenticateUser, authorizeUser("admin"), deleteProduct)
+    .delete(authenticateUser, deleteProduct)
 
 router.route("/:id/reviews").get(getSingleProductReviews);
 

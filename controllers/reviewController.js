@@ -70,26 +70,28 @@ const updateReview = async (req, res) => {
 }
 
 const deleteReview = async (req, res) => {
+    const theUser = req.user.userID
 
-
-    const available = await Review.findOne({_id: req.params.id})
-    if (!available) {
-        throw new notFound("no review with that id")
+    const review = await Review.findOneAndDelete({_id: req.params.id, user: theUser})
+    if (!review) {
+        throw new notFound("no review to delete")
     }
-    
-    checkPermissions(req.user.userID, available.user)
 
-    const review = await Review.findOneAndDelete({_id: req.params.id, user: req.user.userID})
+    //checkPermissions(req.user.userID, available.user)
+
+    //const review = await Review.findOneAndDelete({_id: req.params.id, user: req.user.userID})
 
     // checkPermissions(req.user.userID, review.user)
     // await review.remove()
     res.status(StatusCodes.OK).json({msg: "deleted successfully"})
 }
 
+
+
 module.exports = {
     createReview,
     getAllReviews,
     getSingleReview,
     updateReview,
-    deleteReview
+    deleteReview,
 }
