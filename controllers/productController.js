@@ -66,12 +66,10 @@ const deleteProduct = async (req, res, next) => {
         throw new notFound("No product with the id to delete")
     }
 
-
     // const review = await Review.deleteMany({product: product._id})
     //res.status(StatusCodes.OK).json({msg: "delete succesfull"})
 
     next()
-
 }
 
 const uploadImage = async (req, res) => {

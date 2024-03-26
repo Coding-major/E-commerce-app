@@ -8,14 +8,15 @@ const {
     deleteReview
 } = require("../controllers/reviewController")
 const { authenticateUser, authorizeUser } = require("../middlewares/unAuthorized")
+const aggregation = require('../middlewares/aggregation')
 
 router.route("/")
     .post(authenticateUser, authorizeUser("user"), createReview)
-    .get(getAllReviews)
+    .get(getAllReviews, aggregation)
 
 router.route("/:id")
-    .get(getSingleReview)
+    .get(getSingleReview, aggregation)
     .patch(authenticateUser, authorizeUser("user"), updateReview)
     .delete(authenticateUser,authorizeUser("user"), deleteReview)
 
-module.exports = router
+module.exports = router;
