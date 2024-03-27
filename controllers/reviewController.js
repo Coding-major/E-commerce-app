@@ -27,10 +27,11 @@ const createReview = async (req, res) => {
 
     req.body.user = req.user.userID
     const review = await Review.create(req.body)
+    review.after()
     res.status(StatusCodes.OK).json({review})
 }
 
-const getAllReviews = async (req, res, next) => {
+const getAllReviews = async (req, res) => {
     const reviews = await Review.find({}).populate({
         path: "product",
         select: "name, company, price"
@@ -39,12 +40,10 @@ const getAllReviews = async (req, res, next) => {
         throw new notFound("no review found")
     }
     
-    req.reviews = reviews
-    //res.status(StatusCodes.OK).json({msg: reviews, count: reviews.length})
-    next()
+    res.status(StatusCodes.OK).json({msg: reviews, count: reviews.length})
 }
 
-const getSingleReview = async (req, res, next) => {
+const getSingleReview = async (req, res) => {
     const reviewID = req.params.id
 
     const review = await Review.findOne({_id: reviewID})
@@ -53,9 +52,7 @@ const getSingleReview = async (req, res, next) => {
         throw new notFound("no review with that id exist")
     }
 
-    req.review = review
-    next()
-    //res.status(StatusCodes.OK).json({msg: review})
+    res.status(StatusCodes.OK).json({msg: review})
 }
 
 const updateReview = async (req, res) => {
@@ -68,8 +65,12 @@ const updateReview = async (req, res) => {
     checkPermissions(req.user.userID, available.user)
 
     const { rating, title, comment} = req.body
-    const review = await Review.findOneAndUpdate({user: req.user.userID, _id: req.params.id}, { rating, title, comment})
+    const review = await Review.findOneAndUpdate(
+        {user: req.user.userID, _id: req.params.id}, 
+        { rating, title, comment}
+    )
 
+    review.after()
     res.status(StatusCodes.OK).json({msg: "update successful"})
 
 }
@@ -88,6 +89,7 @@ const deleteReview = async (req, res) => {
 
     // checkPermissions(req.user.userID, review.user)
     // await review.remove()
+    review.after()
     res.status(StatusCodes.OK).json({msg: "deleted successfully"})
 }
 

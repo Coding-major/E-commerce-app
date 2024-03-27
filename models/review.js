@@ -50,18 +50,18 @@ ReviewSchema.statics.calculateAverageRating = async function (productId) {
         },
       },
     ]);
-    console.log(result)
+    console.log(`this is result: ${result}`);
 
     try {
       await this.model('Product').findOneAndUpdate(
         {_id: productId},
         {
           averageRating: Math.ceil(result[0]?.averageRating || 0),
-          numOfReviews: result[0]?.numOfReviews || 0
+          numberOfReviews: result[0]?.numOfReviews || 0
         }
       )
     } catch (error) {
-      
+      console.log(`this is the error: ${error}`)
     }
   };
 

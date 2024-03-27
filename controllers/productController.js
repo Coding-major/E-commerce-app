@@ -10,6 +10,7 @@ const {
     forbidden
 } = require("../errors/indexErrors")
 const checkPermissions = require("../utils/checkpermisions")
+const { count } = require("console")
 
 const createProduct = async (req, res) => {
     req.body.user = req.user.userID
@@ -100,7 +101,7 @@ const getSingleProductReviews = async (req, res) => {
     const {id} = req.params
 
     const review = await Review.find({product: id})
-    res.status(StatusCodes.OK).json({review})
+    res.status(StatusCodes.OK).json({review, count: review.length})
 }
 
 
