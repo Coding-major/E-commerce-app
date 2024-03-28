@@ -1,5 +1,5 @@
 const express = require("express")
-const route = express.Router()
+const router = express.Router()
 
 const {
     createOrder,
@@ -8,3 +8,23 @@ const {
     getCurrentUserOrder,
     updateOrder
 } = require("../controllers/orderController")
+
+const {
+    authenticateUser,
+    authorizeUser,
+    authorizeGettingSingleUSer
+} = require('../middlewares/unAuthorized')
+
+router.route("/")
+    .post(createOrder)
+    .get(authorizeUser('admin'), getAllOrders)
+
+
+router.route('/showAllMyOrders').get(getCurrentUserOrder)
+
+router.route("/:id")
+    .get(getSingleOrder)
+    .patch(updateOrder)
+
+
+module.exports = router

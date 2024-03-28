@@ -51,7 +51,7 @@ const OrderSchema = new mongoose.Schema(
             required: true
         },
 
-        cartItems: [CartItemsSchema],
+        orderItems: [CartItemsSchema],
 
         status: {
             type: String,
