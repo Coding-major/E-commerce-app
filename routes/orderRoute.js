@@ -5,7 +5,7 @@ const {
     createOrder,
     getAllOrders,
     getSingleOrder,
-    getCurrentUserOrder,
+    getCurrentUserOrders,
     updateOrder
 } = require("../controllers/orderController")
 
@@ -20,7 +20,7 @@ router.route("/")
     .get(authorizeUser('admin'), getAllOrders)
 
 
-router.route('/showAllMyOrders').get(getCurrentUserOrder)
+router.route('/showAllMyOrders').get(getCurrentUserOrders)
 
 router.route("/:id")
     .get(getSingleOrder)

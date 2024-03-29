@@ -8,6 +8,9 @@ const connectDB = require("./DB/connect")
 const morgan = require("morgan")
 const cookieParser = require("cookie-parser")
 const fileUpload = require("express-fileupload")
+const rateLimiter = require('express-rate-limiter')
+const helmet = require('helmet')
+
 
 
 const authRouter = require("./routes/authRoute")
