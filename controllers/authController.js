@@ -6,6 +6,21 @@ const {
     attachCookiesToResponse,
 } = require("../utils/index")
 
+const verifyEmail = async (req, res) => {
+    const {email, verificationToken} = req.body;
+
+    const user = await User.findOne({email})
+
+    if(!user) {
+        throw new notFound("no user with that email exist")
+    }
+
+    if (verificationToken != user.verificationToken) {
+        throw new unAuthorized('wrong verifiication token provided')
+    }
+
+    
+}
 
 const register = async (req, res) => {
     const {email, password, name} = req.body
@@ -69,6 +84,7 @@ const logout = async (req, res) => {
 }
 
 module.exports = {
+    verifyEmail,
     register,
     login,
     logout

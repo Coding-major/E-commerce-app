@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const {
+    verifyEmail,
     register,
     login,
     logout
@@ -10,5 +11,6 @@ const {
 router.post('/register', register)
 router.post("/login", login)
 router.get("/logout", logout)
+router.post('/verify-email', verifyEmail)
 
 module.exports = router

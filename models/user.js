@@ -1,4 +1,4 @@
-const mongoose =  require("mongoose")
+const mongoose = require("mongoose")
 const validator = require("validator")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
@@ -27,7 +27,16 @@ const UserSchema = new mongoose.Schema({
         type: String,
         enum: ['admin', 'user'],
         default: 'user'
-    }
+    },
+
+    verificationToken: String,
+
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
+
+    verified: Date
 })
 
 UserSchema.pre("save", async function () {
@@ -36,7 +45,7 @@ UserSchema.pre("save", async function () {
     this.password = await bcrypt.hash(this.password, salt)
 })
 
-UserSchema.methods.comparePassword = async function(thePassword) {
+UserSchema.methods.comparePassword = async function (thePassword) {
     const isMatch = await bcrypt.compare(thePassword, this.password)
     return isMatch
 }
