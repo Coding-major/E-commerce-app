@@ -2,6 +2,7 @@ const mongoose =  require("mongoose")
 const validator = require("validator")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
+const { boolean } = require("joi")
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -27,7 +28,16 @@ const UserSchema = new mongoose.Schema({
         type: String,
         enum: ['admin', 'user'],
         default: 'user'
-    }
+    },
+
+    verification: String,
+
+    isVerified: {
+        type: boolean,
+        default: false
+    },
+
+    verified: Date
 })
 
 UserSchema.pre("save", async function () {

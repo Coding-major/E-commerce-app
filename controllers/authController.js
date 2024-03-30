@@ -20,14 +20,10 @@ const register = async (req, res) => {
         throw new badRequest("ommoh the email already existrrr")
     }
 
+    const verification = "my dear token"
     const user = await User.create(req.body)
-    const userPayload = createTokenUser(user)
 
-    attachCookiesToResponse(res, userPayload)
-    
-
-
-    res.status(StatusCodes.CREATED).json({user: userPayload})
+    res.status(StatusCodes.CREATED).json({user})
     
 }
 
@@ -50,13 +46,14 @@ const login = async (req, res) => {
         throw new unAuthorized("password is not correct")
     }
 
+    if (!user.isVerified) {
+        throw new unAuthorized("verify your account please")
+    }
+
     const userPayload = createTokenUser(user)
     attachCookiesToResponse(res, userPayload)
 
     res.status(StatusCodes.CREATED).json({user: userPayload})
-
-    
-
 }
 
 const logout = async (req, res) => {
