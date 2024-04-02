@@ -1,6 +1,8 @@
 const User = require('../models/user')
 const { customError, badRequest, unAuthorized, notFound  } = require("../errors/indexErrors")
 const { StatusCodes } = require("http-status-codes")
+const crypto = require('crypto')
+const sendEmail = require('../utils/sendEmail')
 const {
     createTokenUser,
     attachCookiesToResponse,
@@ -15,15 +17,24 @@ const verifyEmail = async (req, res) => {
         throw new notFound("no user with that email exist")
     }
 
+    if (user.isVerified) {
+        throw new badRequest('Already verified')
+    }
+
     if (verificationToken != user.verificationToken) {
         throw new unAuthorized('wrong verifiication token provided')
     }
 
-    
+    user.isVerified = true;
+    user.verified = Date.now()
+    verificationToken = ''
+    await user.save();
+
+    res.status(StatusCodes.OK).json({msg: "email verified"})
 }
 
 const register = async (req, res) => {
-    const {email, password, name} = req.body
+    const {email, password, name, role} = req.body
 
     if (!email || !password || !name) {
         throw new badRequest("please fill in the forms where necessary")
@@ -35,14 +46,18 @@ const register = async (req, res) => {
         throw new badRequest("ommoh the email already existrrr")
     }
 
-    const user = await User.create(req.body)
-    const userPayload = createTokenUser(user)
+    const verificationToken = crypto.randomBytes(40).toString('hex');
+    const user = await User.create({
+        email,
+        password,
+        name,
+        role,
+        verificationToken
+    })
 
-    attachCookiesToResponse(res, userPayload)
-    
+    await sendEmail()
 
-
-    res.status(StatusCodes.CREATED).json({user: userPayload})
+    res.status(StatusCodes.CREATED).json({user})
     
 }
 
@@ -69,8 +84,6 @@ const login = async (req, res) => {
     attachCookiesToResponse(res, userPayload)
 
     res.status(StatusCodes.CREATED).json({user: userPayload})
-
-    
 
 }
 
