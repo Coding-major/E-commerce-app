@@ -1,4 +1,5 @@
 const createTokenUser = require("./createTokenUser")
+const sendVerification = require('./sendVerification')
 const {
     verifyJWT,
     attachCookiesToResponse
@@ -8,4 +9,5 @@ module.exports = {
     createTokenUser,
     verifyJWT,
     attachCookiesToResponse,
+    sendVerification
 }

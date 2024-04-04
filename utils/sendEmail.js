@@ -1,18 +1,17 @@
 const nodemailer = require('nodemailer')
-const sendEmail = async() => {
+const nodemailerConfig = require('./nodemailerConfig')
+const sendEmail = async({to, subject, html}) => {
 
     let testAccount = await nodemailer.createTestAccount()
 
-    const transporter = nodemailer.createTransport({
-        
-    });
+    const transporter = nodemailer.createTransport(nodemailerConfig);
 
     const info = await transporter.sendMail({
-        from: '"shehu mustey 👻" <shehumustapham@gmail.com>', // sender address
-        to: "bar@example.com, baz@example.com", // list of receivers
-        subject: "omo, hello✔", // Subject line
+        from: '"shehu mustey 👻" <kanoExpress@gmail.com>', // sender address
+        to, // list of receivers
+        subject, // Subject line
         //text: "Hello world?", // plain text body
-        html: "<h2>Sending email with nodejs/h2>", // html body
+        html, // html body
       });
 
 }

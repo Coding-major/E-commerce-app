@@ -2,10 +2,10 @@ const User = require('../models/user')
 const { customError, badRequest, unAuthorized, notFound  } = require("../errors/indexErrors")
 const { StatusCodes } = require("http-status-codes")
 const crypto = require('crypto')
-const sendEmail = require('../utils/sendEmail')
 const {
     createTokenUser,
     attachCookiesToResponse,
+    sendVerification
 } = require("../utils/index")
 
 const verifyEmail = async (req, res) => {
@@ -55,9 +55,7 @@ const register = async (req, res) => {
         verificationToken
     })
 
-    await sendEmail()
-
-    res.status(StatusCodes.CREATED).json({user})
+    res.status(StatusCodes.CREATED).json({msg: 'please check your email for verification'})
     
 }
 
@@ -86,6 +84,7 @@ const login = async (req, res) => {
     res.status(StatusCodes.CREATED).json({user: userPayload})
 
 }
+
 
 const logout = async (req, res) => {
     res.cookie("my_token", "logout", {
