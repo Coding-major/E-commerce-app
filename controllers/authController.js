@@ -25,10 +25,11 @@ const verifyEmail = async (req, res) => {
         throw new unAuthorized('wrong verifiication token provided')
     }
 
-    user.isVerified = true;
-    user.verified = Date.now()
-    verificationToken = ''
-    await user.save();
+    await User.findOneAndUpdate({email}, { verified: Date.now(), isVerified: true})
+    // user.isVerified = true;
+    // user.verified = Date.now()
+    // verificationToken = ''
+    // await user.save();
 
     res.status(StatusCodes.OK).json({msg: "email verified"})
 }
@@ -54,6 +55,14 @@ const register = async (req, res) => {
         role,
         verificationToken
     })
+    const origin = "http://localhost:3000"
+
+    await sendVerification({
+        name: user.name,
+        email: user.email,
+        verificationToken: user.verificationToken,
+        origin
+    });
 
     res.status(StatusCodes.CREATED).json({msg: 'please check your email for verification'})
     

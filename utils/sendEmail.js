@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer')
 const nodemailerConfig = require('./nodemailerConfig')
-const sendEmail = async({to, subject, html}) => {
+const sendEmail = async ({to, subject, html}) => {
 
     let testAccount = await nodemailer.createTestAccount()
 
@@ -13,7 +13,6 @@ const sendEmail = async({to, subject, html}) => {
         //text: "Hello world?", // plain text body
         html, // html body
       });
-
 }
 
 module.exports = sendEmail;
