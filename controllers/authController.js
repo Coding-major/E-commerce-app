@@ -7,6 +7,7 @@ const {
     attachCookiesToResponse,
     sendVerification
 } = require("../utils/index")
+const bcrypt = require("bcryptjs")
 
 const verifyEmail = async (req, res) => {
     const {email, verificationToken} = req.body;
@@ -18,7 +19,8 @@ const verifyEmail = async (req, res) => {
     }
 
     if (user.isVerified) {
-        throw new badRequest('Already verified')
+        throw new badRequest('The account is already verified',
+        )
     }
 
     if (verificationToken != user.verificationToken) {
@@ -38,13 +40,13 @@ const register = async (req, res) => {
     const {email, password, name, role} = req.body
 
     if (!email || !password || !name) {
-        throw new badRequest("please fill in the forms where necessary")
+        throw new badRequest("you dey craze, fill the form jare")
     }
 
     const emailExist = await User.findOne({email})
 
     if(emailExist) {
-        throw new badRequest("ommoh the email already existrrr")
+        throw new badRequest("ommoh the email already exist, shey you go like login")
     }
 
     const verificationToken = crypto.randomBytes(40).toString('hex');
@@ -72,20 +74,34 @@ const login = async (req, res) => {
     const {email, password} = req.body;
 
     if (!email || !password) {
-        throw new badRequest("please fill in the forms where necessary")
+        throw new badRequest("you be dan iska?, fill the form jare")
     }
 
     const user = await User.findOne({email})
 
     if(!user) {
-        throw new notFound("user with that email does not exist")
+        throw new notFound("Dear idiot oyu no get Account, kuku register")
     }
 
-    const isCorrect = user.comparePassword(password)
+    if (user.isVerified != true) {
+        throw new unAuthorized("verify your account if you no wan die")
+    }
+    //const isCorrect = user.comparePassword(password)
+
+    // if (!isCorrect) {
+    //     throw new unAuthorized("password is not correct")
+    // }
+
+
+    // const salt = await bcrypt.genSalt(10)
+    // const hashedPasssword = await bcrypt.hash(password, salt)
+
+    const isCorrect = await bcrypt.compare(password, user.password)
 
     if (!isCorrect) {
-        throw new unAuthorized("password is not correct")
+        throw new unAuthorized("password is not corrector")
     }
+
 
     const userPayload = createTokenUser(user)
     attachCookiesToResponse(res, userPayload)
